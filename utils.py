@@ -39,33 +39,33 @@ def im_resize(im, size, anti_aliasing):
 
 
 class MyDataset(Dataset):
-    def __init__(self, dataset_path, regex_ext):
+    def __init__(self, dataset_path, regex_ext, psp=None):  # psp:= pattern specific processing, (pattern, function)
         """
         pattern_dict contains "img", "mask" and other data attributes as keys,
         and has correspoinding regular expression pattern and
         processing function as values.
         """
         self.files = []
+        self.dataset_path = dataset_path
+        self.psp = psp
         for f in sorted(os.listdir(dataset_path)):
             if re.match(regex_ext, f):
                 self.files.append(f)
-        self.data = np.zeros((len(self.files), 512, 512, 3), dtype='f')
-        for i, f in enumerate(self.files):
-            img = cv2.imread(dataset_path.strip('/') + '/' + f)
-            img = crop_im_by_circle(img)
-            img = im_resize(img, (512, 512), 1)
-            if f[-5] == '1':
-                img = img[:, ::-1, :].copy()
-            self.data[i] = img
-        self.data -= self.data.mean(axis=(2, 3), keepdims=True)
-        self.data /= self.data.std(axis=(2, 3), keepdims=True)
 
     def __len__(self):
         return len(self.data)
 
     def __getitem__(self, idx):
+        img = cv2.imread(self.dataset_path.strip('/') + '/' + self.files[idx])
+        img = crop_im_by_circle(img)
+        img = im_resize(img, (512, 512), 1)
+        if self.psp:
+            pattern, func = self.psp
+            img = func(re.match(pattern, self.files[idx]).group(1), img)
+        img -= np.array([0.485, 0.456, 0.406]).reshape(1, 1, 3)
+        img /= np.array([0.229, 0.224, 0.225]).reshape(1, 1, 3)
         return (torch.from_numpy(self.data[idx].transpose(2, 0, 1)),
-                self.files[idx][:-4])
+                self.files[idx])
 
 
 def compute(directory, re_pattern, out_file, seg_model=ESPNet(), seg_model_wts="r_embedding/esp_model_wts.pt",
