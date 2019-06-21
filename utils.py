@@ -92,7 +92,7 @@ def compute(directory, re_pattern, out_file, seg_model=ESPNet(), seg_model_wts="
                 segs = F.softmax(seg_model(ims), 1)[:, :1, ...].repeat(1, 3, 1, 1)
                 segs -= mean
                 segs /= std
-                embs = emb_model(segs).cpu().numpy()
+                embs = emb_model(segs)[0].cpu().numpy()
                 f['embs'][cnt * batch_size:(cnt + 1) * batch_size, :] = embs
             cnt += 1
             print(cnt * batch_size)
