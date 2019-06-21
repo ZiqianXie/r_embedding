@@ -7,7 +7,7 @@ import re
 import torch
 import h5py
 from .model import ESPNet, Embedding
-import torch.functional as F
+import torch.nn.functional as F
 
 
 def crop_im_by_circle(img):
