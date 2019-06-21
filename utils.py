@@ -64,7 +64,7 @@ class MyDataset(Dataset):
             img = func(re.match(pattern, self.files[idx]).group(1), img)
         img -= np.array([0.485, 0.456, 0.406]).reshape(1, 1, 3)
         img /= np.array([0.229, 0.224, 0.225]).reshape(1, 1, 3)
-        return (torch.from_numpy(self.data[idx].transpose(2, 0, 1)),
+        return (torch.from_numpy(img.transpose(2, 0, 1)),
                 self.files[idx])
 
 
