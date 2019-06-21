@@ -86,6 +86,7 @@ def compute(directory, re_pattern, out_file, seg_model=ESPNet(), seg_model_wts="
         std = torch.tensor([0.229, 0.224, 0.225]).view(3, 1, 1).to(device)
         flist = []
         for ims, f_names in DataLoader(d, batch_size=batch_size):
+            ims = ims.to(device)
             flist.extend(f_names)
             with torch.no_grad():
                 segs = F.softmax(seg_model(ims), 1)[:, :1, ...]
