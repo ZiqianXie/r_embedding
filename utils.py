@@ -56,7 +56,7 @@ class MyDataset(Dataset):
         return len(self.files)
 
     def __getitem__(self, idx):
-        img = cv2.imread(self.dataset_path.strip('/') + '/' + self.files[idx])
+        img = cv2.imread(self.dataset_path.rstrip('/') + '/' + self.files[idx])
         img = crop_im_by_circle(img)
         img = im_resize(img, (512, 512), 1)
         if self.psp:
