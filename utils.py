@@ -78,7 +78,7 @@ def compute(directory, re_pattern, out_file, seg_model=ESPNet(), seg_model_wts="
         seg_model = seg_model.to(device).eval()
         seg_model.load_state_dict(torch.load(seg_model_wts))
         emb_model = emb_model.to(device).eval()
-        emb_model.load_state_dict(emb_model_wts)
+        emb_model.load_state_dict(torch.load(emb_model_wts))
         d = MyDataset(directory, re_pattern)
         f.create_dataset('embs', (len(d), 128), dtype='f')
         cnt = 0
