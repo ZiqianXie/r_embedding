@@ -68,8 +68,8 @@ class MyDataset(Dataset):
                 self.files[idx][:-4])
 
 
-def compute(directory, re_pattern, out_file, seg_model=ESPNet(), seg_model_wts="./esp_model_wts.pt",
-               emb_model=Embedding(128), emb_model_wts="./model_wts.pth",
+def compute(directory, re_pattern, out_file, seg_model=ESPNet(), seg_model_wts="r_embedding/esp_model_wts.pt",
+               emb_model=Embedding(128), emb_model_wts="r_embedding/model_wts.pth",
                device="cuda:0", batch_size=32):
     """
     precompute the segmentation mask using ESPNet
