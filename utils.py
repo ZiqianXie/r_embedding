@@ -84,7 +84,9 @@ def compute(directory, re_pattern, out_file, seg_model=ESPNet(), seg_model_wts="
         cnt = 0
         mean = torch.tensor([0.485, 0.456, 0.406]).view(3, 1, 1).to(device)
         std = torch.tensor([0.229, 0.224, 0.225]).view(3, 1, 1).to(device)
+        flist = []
         for ims, f_names in DataLoader(d, batch_size=batch_size):
+            flist.extend(f_names)
             with torch.no_grad():
                 segs = F.softmax(seg_model(ims), 1)[:, :1, ...]
                 segs -= mean
@@ -93,4 +95,5 @@ def compute(directory, re_pattern, out_file, seg_model=ESPNet(), seg_model_wts="
                 f['embs'][cnt * batch_size:(cnt + 1) * batch_size, :] = embs
             cnt += 1
             print(cnt * batch_size)
+        f['embs'].attrs['file_name'] = flist
 
