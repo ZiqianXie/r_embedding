@@ -96,5 +96,5 @@ def compute(directory, re_pattern, out_file, seg_model=ESPNet(), seg_model_wts="
                 f['embs'][cnt * batch_size:(cnt + 1) * batch_size, :] = embs
             cnt += 1
             print(cnt * batch_size)
-        f['embs'].attrs['file_names'] = flist
+        f.create_dataset('file_names', data=flist)
 
