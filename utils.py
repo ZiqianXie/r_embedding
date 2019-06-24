@@ -87,7 +87,7 @@ def compute(directory, re_pattern, out_file, seg_model=ESPNet(), seg_model_wts="
         flist = []
         for ims, f_names in DataLoader(d, batch_size=batch_size):
             ims = ims.to(device)
-            flist.extend(f_names)
+            flist.extend(f_names.encode('ascii', 'ignore'))
             with torch.no_grad():
                 segs = F.softmax(seg_model(ims), 1)[:, :1, ...].repeat(1, 3, 1, 1)
                 segs -= mean
